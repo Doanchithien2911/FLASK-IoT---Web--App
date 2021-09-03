@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FreeDash</title>
+<link rel = "icon" href = "https://cdn.iconscout.com/icon/free/png-256/cloud-4436-1150010.png" type = "image/x-icon">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<style>
+     {% block style %}{% endblock %}
+</style>
+{% block script %}{% endblock %}
+</head>
+<body>
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+  <a href="/" class="w3-bar-item w3-button w3-padding-16 "><i class="fa fa-home w3-margin w3-padding-16"></i>Dashboard</a>
+  <a href="{{url_for('user')}}" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-male w3-margin w3-padding-16"></i> Account</a>
+  <a href="{{url_for('setting')}}" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-gear w3-margin w3-padding-16"></i> Settings</a>
+  <a href="{{url_for('logout')}}" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-sign-out w3-margin w3-padding-16"></i>Log out</a>
+</div>
+
+<div class="w3-main " style="margin-left:200px">
+<div class="w3-teal">
+  <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>Dashboard</h1>
+  </div>
+</div>
+<div class="w3-container w3-light-grey">
+{% block content %}{% endblock %}
+</div>
+</div>
+
+<script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+     
+</body>
+</html>

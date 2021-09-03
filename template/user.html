@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+{% block style %}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+{% endblock %}
+{% block script %}
+<script>
+var time=[];
+var temp=[];
+var humi=[];
+var count=0;
+function drawChart()
+{
+  $.ajax({url:"{{val[0]}}/api/read/{{val[1]}}",success:function(result){
+    time.push(result[0]);
+    temp.push(result[1]);
+    humi.push(result[2]);
+    $("#temp").text(temp[temp.length-1]+"°C");
+    $("#humi").text(humi[humi.length-1]+"%");
+    $("#soil").text(result[3]);
+    $("#flow").text(result[4]);
+    count++;
+    if(count>8){
+      time.shift();
+      temp.shift();
+      humi.shift();
+    }
+    new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: time,
+    datasets: [{
+      fill: false,
+      borderColor: "rgba(255,0,0,0.5)",
+      data: temp
+    }]
+  },    
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "TEMPERATURE °C",
+      fontSize: 16
+           }
+           }
+          }
+
+           );
+        new Chart("myChart1", {
+           type: "line",
+            data: {
+           labels: time,
+             datasets: [{
+             fill: false,
+              borderColor: "rgba(255,0,0,0.5)",
+             data: humi
+                     }]
+              },    
+        options: {
+          legend: {display: false},
+         title: {
+       display: true,
+       text: "HUMIDITY %",
+       fontSize: 16
+           }
+           }
+          }
+
+           );
+            }
+          });
+}
+var draw=setInterval(drawChart,2000);
+var sttLed = 1;
+var sttHumi = 1;
+var sttPump = 1;
+var sttWater = 1;
+function getLed()
+{
+  $.ajax({
+    type:"GET",
+    url:"{{val[0]}}/api/get/led/{{val[1]}}",
+    success:function(result){
+      res=Number(result);
+      if(result!=sttLed)
+      {
+        $("#customSwitch1").prop("checked",res);
+        sttLed = res;
+      }
+
+    }
+
+  });
+}
+function getHumi()
+{
+  $.ajax({
+    type:"GET",
+    url:"{{val[0]}}/api/get/humidifier/{{val[1]}}",
+    success:function(result){
+      res=Number(result);
+      if(res!=sttHumi)
+      {
+        $("#customSwitch2").prop("checked",res);
+        sttHumi = res;
+      }
+    }
+  });
+}
+function getPump()
+{
+  $.ajax({
+    type:"GET",
+    url:"{{val[0]}}/api/get/pump/{{val[1]}}",
+    success:function(result)
+    {
+      res=Number(result);
+      if(res!=sttPump)
+      {
+        $("#customSwitch3").prop("checked",res);
+        sttPump=res;
+      }
+    }
+  });
+}
+function getWater()
+{
+  $.ajax({
+    type:"GET",
+    url:"{{val[0]}}/api/get/water/{{val[1]}}",
+    success:function(result)
+    {
+      res=Number(result);
+      if(res!=sttWater)
+      {
+        $("#customSwitch4").prop("checked",res);
+        sttWater=res;
+      }
+    }
+  })
+}
+var stt=setInterval(getLed,1000);
+var stt=setInterval(getHumi,1000);
+var stt=setInterval(getPump,1000);
+var stt=setInterval(getWater,1000);
+$(document).ready(function(){
+  $("#customSwitch1").on('change', function() {
+        if ($(this).is(':checked')) 
+        {
+          var sendSTT = {light:1};
+        }
+        else {
+          var sendSTT = {light:0};
+        }
+        $.ajax({
+            type:"POST",
+            url:"{{val[0]}}/api/post/led/{{val[1]}}",
+            data:JSON.stringify(sendSTT),
+            dataType: "json",
+            contentType: "application/json",
+            success:function(data)
+            {
+             
+            }
+        });
+    });
+})
+$(document).ready(function(){
+  $("#customSwitch2").on('change', function() {
+        if ($(this).is(':checked')) 
+        {
+          var sendSTT = {humidifier:1};
+        }
+        else {
+          var sendSTT = {humidifier:0};
+        }
+        $.ajax({
+            type:"POST",
+            url:"{{val[0]}}/api/post/humidifier/{{val[1]}}",
+            data:JSON.stringify(sendSTT),
+            dataType: "json",
+            contentType: "application/json",
+            success:function(data)
+            {
+             
+            }
+        });
+    });
+})
+$(document).ready(function(){
+  $("#customSwitch3").on('change', function() {
+        if ($(this).is(':checked')) 
+        {
+          var sendSTT = {pump:1};
+        }
+        else {
+          var sendSTT = {pump:0};
+        }
+        $.ajax({
+            type:"POST",
+            url:"{{val[0]}}/api/post/pump/{{val[1]}}",
+            data:JSON.stringify(sendSTT),
+            dataType: "json",
+            contentType: "application/json",
+            success:function(data)
+            {
+             
+            }
+        });
+    });
+})
+$(document).ready(function(){
+  $("#customSwitch4").on('change', function() {
+        if ($(this).is(':checked')) 
+        {
+          var sendSTT = {water:1};
+        }
+        else {
+          var sendSTT = {water:0};
+        }
+        $.ajax({
+            type:"POST",
+            url:"{{val[0]}}/api/post/water/{{val[1]}}",
+            data:JSON.stringify(sendSTT),
+            dataType: "json",
+            contentType: "application/json",
+            success:function(data)
+            {
+             
+            }
+        });
+    });
+})
+
+</script>
+{% endblock %}
+{% block content %}
+ 
+<div class="w3-row ">
+<div class="w3-quarter   w3-card-4 w3-margin w3-white w3-round-xlarge " style="width:270px;height:150px">
+  <header class=" w3-container w3-padding-16 w3-blue w3-center w3-round-xlarge ">
+      <img src="https://image.flaticon.com/icons/png/512/76/76660.png" width="30" height="30">
+      <head>TEMPERATURE</head>
+    </header>
+    <div class="w3-container w3-center">
+     <h1 id="temp"></h1>
+    </div>
+</div>
+<div class="w3-quarter w3-card-4 w3-margin w3-white w3-round-xlarge " style="width:270px;height:150px">
+   <header class="w3-container w3-blue w3-padding-16 w3-center w3-round-xlarge ">
+      <img src="https://image.flaticon.com/icons/png/512/219/219816.png" width="30" height="30">
+      <head>HUMIDITY</head>
+    </header>
+    <div class="w3-container w3-center">
+     <h1 id="humi"></h1>
+    </div>
+</div>
+<div class="w3-quarter w3-card-4 w3-margin w3-white w3-round-xlarge " style="width:270px;height:150px">
+  <header class="w3-container w3-blue w3-padding-16 w3-center w3-round-xlarge ">
+      <img src="https://icon-library.com/images/moisture-icon/moisture-icon-0.jpg" width="30" height="30">
+      <head>SOIL SENSOR</head>
+    </header>
+    <div class="w3-container w3-center">
+     <h1 id="soil"></h1>
+    </div>
+</div>
+<div class="w3-quarter w3-card-4 w3-margin w3-white w3-round-xlarge  " style="width:270px;height:150px">
+  <header class="w3-container w3-blue w3-padding-16 w3-center w3-round-xlarge ">
+      <img src="https://cdn1.iconfinder.com/data/icons/pipes-water-flow-outline/61/54_-Valve-_water_flow-512.png" width="30" height="30">
+      <head>WATER FLOW</head>
+    </header>
+    <div class="w3-container w3-center">
+     <h1 id="flow"></h1>
+    </div>
+</div>
+</div> 
+
+
+<div class="w3-row">
+<div class="w3-quarter   w3-card-4 w3-margin w3-white w3-round-xlarge  " style="width:270px;height:150px">
+  <header class=" w3-container w3-padding-16 w3-blue w3-center w3-round-xlarge ">
+      <img src="https://img.icons8.com/ios/452/light-on--v1.png" width="30" height="30">
+      <head>LIGHT</head>
+    </header>
+    <div class="w3-container w3-center w3-padding-16">
+      <label class="switch">
+         <input type="checkbox" id="customSwitch1" checked>
+           <span class="slider round"></span>
+      </label>
+    </div>
+</div>
+<div class="w3-quarter w3-card-4 w3-margin w3-white w3-round-xlarge" style="width:270px;height:150px">
+   <header class="w3-container w3-blue w3-padding-16 w3-center w3-round-xlarge">
+      <img src="https://cdn0.iconfinder.com/data/icons/elasto-heating-and-cooling/26/humidifier-512.png" width="30" height="30">
+      <head>HUMIDIFIER</head>
+    </header>
+    <div class="w3-container w3-center w3-padding-16">
+     <label class="switch">
+         <input type="checkbox" id="customSwitch2" checked>
+           <span class="slider round"></span>
+      </label>
+    </div>
+</div>
+<div class="w3-quarter w3-card-4 w3-margin w3-white w3-round-xlarge " style="width:270px;height:150px">
+  <header class="w3-container w3-blue w3-padding-16 w3-center w3-round-xlarge">
+      <img src="https://image.flaticon.com/icons/png/512/416/416274.png" width="30" height="30">
+      <head>PUMPS</head>
+    </header>
+    <div class="w3-container w3-center w3-padding-16">
+     <label class="switch">
+         <input type="checkbox" id="customSwitch3" checked>
+           <span class="slider round"></span>
+      </label>
+    </div>
+</div>
+<div class="w3-quarter w3-card-4 w3-margin w3-white  w3-round-xlarge" style="width:270px;height:150px">
+  <header class="w3-container w3-blue w3-padding-16 w3-center w3-round-xlarge">
+      <img src="https://cdn1.iconfinder.com/data/icons/elasto-gardening-tools-and-machinery/26/14-GARDEN-TOOLS-READY_irrigation-system-512.png" width="30" height="30">
+      <head>WATERING</head>
+    </header>
+    <div class="w3-container w3-center w3-padding-16">
+     <label class="switch">
+         <input type="checkbox" id="customSwitch4" checked>
+           <span class="slider round"></span>
+      </label>
+    </div>
+</div>
+</div>  
+<div class="w3-row">
+  <div class=" w3-container w3-white w3-margin w3-center w3-card-4 w3-round-xlarge w3-padding-16">
+    <canvas id="myChart" style="width:100%;"></canvas>
+</div>
+<div class="w3-row">
+  <div class="w3-container w3-white w3-margin w3-center w3-card-4 w3-round-xlarge w3-padding-16">
+    <canvas id="myChart1" style="width:100%;"></canvas>
+  </div>
+</div>
+{% endblock %}
+

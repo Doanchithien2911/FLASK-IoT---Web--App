@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+}
+.bg {
+    height: 100%;
+    background: linear-gradient(to bottom, #990099 0%, #cc3399 100%);
+}
+.boxform{
+position: absolute;
+ top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+ border-radius: 25px;
+  background: white;
+  padding: 20px;
+  width: 300px;
+  height: 480px;
+}
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 25px;
+  background-color: white;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+
+.btn{
+  margin: auto;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  -ms-transform: translate(-50%, 25%);
+  transform: translate(-50%, 25%);
+  width:90% ;
+  padding: 14px 20px;
+  background-color: mediumseagreen;
+  font-size: 100%;
+  border-radius: 20px;
+
+}
+.btn:hover{
+  background-color: #6699FF;
+  color: black;
+}
+.text1{
+  color: black;
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  -ms-transform: translate(-50%, -60%);
+  transform: translate(-50%, -60%);
+padding: 14px 20px;
+
+}
+.text2{
+	color: black;
+	text-align: center;
+
+}
+</style>
+<body>
+
+<div class="bg">
+  <div class="w3-display-middle"> 
+		 <form action="/" class="boxform" method="post">
+    <h1 class="text2">Login</h1>
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="Email" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+    <a href="#" class="text1">Forgot password</a>
+       <button type="submit" class="btn">LOGIN</button>
+       <h3>If you don't have an account,<a href="signup">register now</a> </h3>
+       {% with messages =get_flashed_messages() %}
+    {% if messages %}
+    {% for msg in messages %}
+    <p>{{msg}}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+  </form>
+  
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,1 +1,5 @@
-# FLASK-IoT---Web--App
+this IoT web app project provides many features.
+ It includes a register, login, and follow the status of your farm likes temperature, humidity, soil, etc...
+You also can control devices from far by this app include light, humidifier, pump, watering. 
+All about things get by RESTful API, its can POST data from your farm to server, in the opposite direction you also can GET data from server to control devices, etc.....
+To securing your work, an ID channel, API key is created uniquely and can  change your password, API key to better secure

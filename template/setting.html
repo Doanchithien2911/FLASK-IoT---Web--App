@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<form id="submit-form" class="w3-container w3-white w3-card-4 w3-margin-bottom w3-padding-16" action="/channel/setting/" method="post">  
+    <label class="w3-text-blue"><b>API KEY</b></label>
+    <input class="w3-input w3-border" type="text" value="{{value[1]}}"></p>
+    <input type="submit" name="btn" class="w3-btn w3-blue" value="CHANGE API"></p></p>
+  </form>
+  <form id="submit-form1" class="w3-container w3-white w3-card-4  w3-margin-bottom w3-padding-16" action="/channel/setting/" method="post">  
+    <label class="w3-text-blue"><b>CURRENT PASSWORD</b></label>
+    <input class="w3-input w3-border" name="opsw" type="password"></p>
+    <label class="w3-text-blue"><b>NEW PASSWORD</b></label>
+    <input class="w3-input w3-border" name="npsw" type="password"></p>
+    <input type="submit" name="btn" class="w3-btn w3-blue" value="CHANGE PASSWORD"></p>
+    <p class="w3-container w3-blue">{{value[2]}}</p>
+  </form>
+{% endblock %}

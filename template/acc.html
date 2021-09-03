@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<form id="submit-form" class="w3-container w3-white w3-card-4 w3-margin-bottom w3-padding-16" action="/channel/setting/" method="post">  
+  <label class="w3-text-blue"><b>USERNAME</b></label>
+  <input class="w3-input w3-border" type="text" value="{{val[0]}}"></p>
+  <label class="w3-text-blue"><b>EMAIL</b></label>
+  <input class="w3-input w3-border" type="text" value="{{val[1]}}"></p>
+  <label class="w3-text-blue"><b>WRITE API</b></label>
+  <input class="w3-input w3-border" type="text" value="channel/{{val[2]}}/api/write/{{val[3]}}"></p>
+  <label class="w3-text-blue"><b>READ API</b></label>
+  <input class="w3-input w3-border" type="text" value="channel/{{val[2]}}/api/read/{{val[3]}}"></p>
+  <label class="w3-text-blue"><b>STATE LED</b></label>
+  <input class="w3-input w3-border" type="text" value="channel/{{val[2]}}/api/get/led/{{val[3]}}"></p>
+  <label class="w3-text-blue"><b>STATE HUMIDIFIER</b></label>
+  <input class="w3-input w3-border" type="text" value="channel/{{val[2]}}/api/get/humidifier/{{val[3]}}"></p>
+  <label class="w3-text-blue"><b>STATE PUMP</b></label>
+  <input class="w3-input w3-border" type="text" value="channel/{{val[2]}}/api/get/pump/{{val[3]}}"></p>
+  <label class="w3-text-blue"><b>STATE WATERING</b></label>
+  <input class="w3-input w3-border" type="text" value="channel/{{val[2]}}/api/get/water/{{val[3]}}"></p>
+</form>
+{% endblock %}
